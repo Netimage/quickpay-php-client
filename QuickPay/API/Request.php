@@ -164,8 +164,12 @@ class Request
         }
 
         // Store received headers in temporary memory file, remember sent headers
+		// fallback to temp if memory is not available
         $fh_header = fopen('php://memory', 'w+');
-        curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header);
+		if (!@curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header)) {
+			$fh_header = fopen('php://temp', 'w+');
+			curl_setopt($this->client->ch, CURLOPT_WRITEHEADER, $fh_header);
+		}
         curl_setopt($this->client->ch, CURLINFO_HEADER_OUT, true);
 
         // Execute the request
