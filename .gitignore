@@ -3,3 +3,4 @@ vendor/
 composer.phar
 composer.lock
 priv-test.php
+/nbproject
