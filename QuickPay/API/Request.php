@@ -193,5 +193,11 @@ class Request
         // Return the response object.
         return new Response($response_code, $sent_headers, $received_headers, $response_data);
     }
-
+	
+	
+	public function set_headers($additional_headers) {
+		if (!empty($additional_headers)) {
+			$this->client->set_headers($additional_headers);
+		}
+	}
 }

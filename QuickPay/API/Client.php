@@ -43,9 +43,6 @@ class Client
 
         // Instantiate cURL object
         $this->authenticate();
-		
-		// Default headers
-		$this->set_headers();
     }
 
     /**
@@ -73,23 +70,16 @@ class Client
     {
         $this->ch = curl_init();
 
-        $headers = array(
-            'Accept-Version: v10',
-            'Accept: application/json', 
-        );
-
-        if (!empty($this->auth_string)) {
-            $headers[] = 'Authorization: Basic ' . base64_encode($this->auth_string);
-        }
-
+        
         $options = array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-            CURLOPT_HTTPHEADER => $headers
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC
         );
 
         curl_setopt_array($this->ch, $options);
+		
+		$this->set_headers();
     }
 	
 	public function set_headers($additional_headers = array()) {
@@ -97,8 +87,12 @@ class Client
             'Accept-Version: v10',
             'Accept: application/json', 
         );
+
+        if (!empty($this->auth_string)) {
+            $headers[] = 'Authorization: Basic ' . base64_encode($this->auth_string);
+        }
 		
-		foreach( $additional_headers as $additional_header ) {
+		foreach($additional_headers as $additional_header) {
 			$headers[] = $additional_header;
 		}
 		
