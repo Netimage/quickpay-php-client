@@ -43,6 +43,9 @@ class Client
 
         // Instantiate cURL object
         $this->authenticate();
+		
+		// Default headers
+		$this->set_headers();
     }
 
     /**
@@ -88,4 +91,17 @@ class Client
 
         curl_setopt_array($this->ch, $options);
     }
+	
+	public function set_headers($additional_headers = array()) {
+		$headers = array(
+            'Accept-Version: v10',
+            'Accept: application/json', 
+        );
+		
+		foreach( $additional_headers as $additional_header ) {
+			$headers[] = $additional_header;
+		}
+		
+		curl_setopt( $this->ch, CURLOPT_HTTPHEADER, $headers);
+	}
 }
