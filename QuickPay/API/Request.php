@@ -20,6 +20,12 @@ class Request
      * @access protected
      */
     protected $client;
+	
+	/**
+	 * Curl options
+	 * @var array
+	 */
+	public $curlOptions = [];
 
     /**
      * __construct function.
@@ -157,12 +163,17 @@ class Request
     {
         // Set the HTTP request type
         curl_setopt($this->client->ch, CURLOPT_CUSTOMREQUEST, $request_type);
+		
+		// Special pem file?
+		if (isset($this->curlOptions['pemFile']) && is_readable($this->curlOptions['pemFile'])) {
+			curl_setopt($this->client->ch, CURLOPT_CAINFO, $this->curlOptions['pemFile']);
+		}
 
-        // If additional data is delivered, we will send it along with the API request
+		// If additional data is delivered, we will send it along with the API request
         if (is_array($form) && ! empty($form)) {
             curl_setopt($this->client->ch, CURLOPT_POSTFIELDS, http_build_query($form));
         }
-
+		
         // Store received headers in temporary memory file, remember sent headers
 		// fallback to temp if memory is not available
         $fh_header = fopen('php://memory', 'w+');
